@@ -11,5 +11,7 @@ dependencies = [
     "plotly>=6.0.1",
     "pytest>=8.3.5",
     "scipy>=1.15.2",
+    "sqlalchemy>=2.0.40",
     "streamlit>=1.44.0",
 ]
+requires = ["setuptools>=61.0"]

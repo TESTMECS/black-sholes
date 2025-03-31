@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from black_scholes import black_scholes, generate_price_matrix
+from functions.black_scholes import black_scholes, generate_price_matrix
 
 
 class TestBlackScholes(unittest.TestCase):

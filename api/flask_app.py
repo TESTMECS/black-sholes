@@ -136,9 +136,10 @@ app.before_request_funcs.setdefault(None, []).append(before_first_request)
 def cleanup():
     stop_streamlit()
 
+# TODO: Add routes for database functions. 
+
 
 # Register the cleanup function to be called when the app exits
-
 atexit.register(cleanup)
 
 if __name__ == "__main__":

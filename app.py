@@ -1,8 +1,8 @@
 import streamlit as st
 import plotly.express as px
 import numpy as np
-from black_scholes import black_scholes, generate_price_matrix
-from db_storage import init_db, store_calculation, store_heatmap_data
+from functions.black_scholes import black_scholes, generate_price_matrix
+from database.db_storage import init_db, store_calculation, store_heatmap_data, get_calculations
 
 # Set page configuration
 st.set_page_config(page_title="Black-Scholes Option Pricing Model", layout="wide")
@@ -26,8 +26,6 @@ with st.sidebar:
 
     # Get calculation history from database
     try:
-        from db_storage import get_calculations
-
         history = get_calculations(limit=10)
 
         if not history:
