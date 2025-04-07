@@ -1,14 +1,36 @@
-from flask import Flask, jsonify
+from flask.app import Flask
+from flask import Flask, jsonify, request
 import subprocess
 import time
 import atexit
+from api.routes import register_blueprints
+from flask_cors import CORS
 
 app = Flask(__name__)
+# Enable CORS for all routes
+CORS(app)
 
 # Global variable to store the Streamlit process
 streamlit_process = None
 streamlit_port = 8501  # Default Streamlit port
 
+# Register API routes
+register_blueprints(app)
+
+# TODO: Add routes for database functions.
+@app.route("/api")
+def api_index():
+    """Base API route with information"""
+    return jsonify({
+        "name": "Black-Scholes API",
+        "version": "1.0.0",
+        "description": "API for Black-Scholes option pricing model",
+        "endpoints": {
+            "auth": "/api/auth",
+            "calculations": "/api/calculations",
+            "heatmaps": "/api/calculation/{id}/heatmaps"
+        }
+    })
 
 def start_streamlit():
     """Start the Streamlit application as a subprocess"""
@@ -136,12 +158,8 @@ app.before_request_funcs.setdefault(None, []).append(before_first_request)
 def cleanup():
     stop_streamlit()
 
-# TODO: Add routes for database functions. 
-
 
 # Register the cleanup function to be called when the app exits
 atexit.register(cleanup)
 
-if __name__ == "__main__":
-    # Start the Flask app
-    app.run(host="0.0.0.0", port=5000, debug=True)
+application: Flask = app

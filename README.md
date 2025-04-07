@@ -25,32 +25,47 @@ uv lock --check
 # or install manually
 uv pip install -r requirements.txt # uv add -r requirements.txt works too.
 ```
+
 ## Usage
+
 ### Running with Streamlit directly
+
 To run the application directly with Streamlit:
+
 ```bash
 # use the justfile!
 just streamlit
 # Or use the environment
 source .venv/bin/activate && streamlit run app.py
 ```
+
 This will start the Streamlit server and open the application on port 8501.
+
 ### Running with Flask
+
 To run the application with Flask (which will automatically start Streamlit):
+
 ```bash
 python flask_app.py
 ```
+
 This will start the Flask server on port 5000 and the Streamlit application on port 8501. You can access the application by navigating to:
+
 - Flask entry point: http://localhost:5000
 - Streamlit direct access: http://localhost:8501
+
 ## API Endpoints
+
 The Flask application provides the following API endpoints:
+
 - `/`: Redirects to the Streamlit application
 - `/status`: Returns the status of the Streamlit application
 - `/start`: Starts the Streamlit application if it's not already running
 - `/stop`: Stops the Streamlit application
 - `/restart`: Restarts the Streamlit application
+
 ## Recent Enhancements
+
 - **Improved Profit & Loss Visualization**: Enhanced P&L heatmaps that show potential returns based on:
   - Stock price at expiration (x-axis)
   - Option premium paid (y-axis)
@@ -63,40 +78,60 @@ The Flask application provides the following API endpoints:
   - Sidebar history panel showing past calculations
   - Improved color scales and data visualization
   - Better formatted annotations in heatmaps
+
 ## Black-Scholes Model
+
 The Black-Scholes model is a mathematical model used to determine the theoretical price of European-style options. The model assumes that the price of the underlying asset follows a geometric Brownian motion with constant drift and volatility.
+
 ### Parameters
+
 - **Current Price (S)**: The current price of the underlying asset
 - **Strike Price (K)**: The price at which the option can be exercised
 - **Time to Maturity (T)**: The time until the option expires (in years)
 - **Volatility (σ)**: The standard deviation of the underlying asset's returns
 - **Risk-Free Rate (r)**: The risk-free interest rate
+
 ### Formulas
+
 The Black-Scholes formula for a call option is:
+
 ```
 C = S * N(d1) - K * e^(-r * T) * N(d2)
 ```
+
 The formula for a put option is:
+
 ```
 P = K * e^(-r * T) * N(-d2) - S * N(-d1)
 ```
+
 Where:
+
 ```
 d1 = (ln(S/K) + (r + σ^2/2) * T) / (σ * √T)
 d2 = d1 - σ * √T
 ```
+
 And N(x) is the cumulative distribution function of the standard normal distribution.
+
 ### P&L Calculation at Expiration
+
 For a call option buyer:
+
 ```
 P&L = max(0, spot_price - strike_price) - premium_paid
 ```
+
 For a put option buyer:
+
 ```
 P&L = max(0, strike_price - spot_price) - premium_paid
 ```
+
 ## Future Enhancements
+
 The following features are planned for future development:
+
 ### Advanced Option Strategies
 
 - **Option Spreads**: Implement bull/bear spreads, butterfly spreads, and iron condors
@@ -104,30 +139,48 @@ The following features are planned for future development:
 - **Strategy Builder**: Drag-and-drop interface for building custom option strategies
 
 ### Enhanced Analytics
+
 - **Greeks Visualization**: Interactive displays for delta, gamma, theta, vega, and rho
 - **Implied Volatility Surface**: 3D visualization of implied volatility across strikes and expirations
 - **Monte Carlo Simulation**: Probability distributions of future option values
 - **Scenario Analysis**: Stress testing options under different market conditions
 
 ### User Experience
+
 - **Portfolio Management**: Save and manage multiple option positions
 - **Mobile Responsive Design**: Optimize UI for mobile devices
 - **Export Functionality**: Download calculations and charts as CSV/PDF
 
 ### Market Integration
+
 - **Real-time Data**: Connect to market APIs for live option chain data
 - **Historical Analysis**: Backtest strategies against historical market data
 - **Volatility Forecast**: Predict future volatility based on historical patterns
 - **Earnings Impact Analysis**: Model effects of earnings announcements on option prices
 
 ### Advanced Models
+
 - **Heston Model**: Support for stochastic volatility
 - **Jump-Diffusion Models**: Account for price jumps in underlying assets
 - **Binomial/Trinomial Trees**: Alternative pricing methods for American options
 - **SABR Model**: Advanced volatility modeling for interest rate options
 
 ### Educational Features
+
 - **Interactive Tutorials**: Step-by-step guides for option concepts
 - **Strategy Templates**: Pre-built examples of common trading strategies
 - **Risk Explainers**: Visual explanations of option risks and rewards
 - **Quiz Module**: Test understanding of option concepts
+
+## API Access
+
+The Black-Scholes application now provides a secure, authenticated API to access the database.
+
+### Features:
+
+- JWT-based authentication
+- Access to all calculations and heatmaps
+- Complete CRUD operations
+- Rate limiting and security best practices
+
+See [API Documentation](api/README.md) for complete details on how to use the API.
