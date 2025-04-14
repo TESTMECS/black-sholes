@@ -7,6 +7,6 @@ lint:
 tsc:
   mypy .
 runapp:
-  uv run app_fastapi.py
+  uvicorn api.fastapi_app:app --reload
 testall:
   pytest

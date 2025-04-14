@@ -26,6 +26,7 @@ class CalculationCreate(CalculationBase):
 
 class CalculationResponse(CalculationBase):
     """Calculation response model."""
+
     model_config = ConfigDict(from_attributes=True)
     id: int
     timestamp: str

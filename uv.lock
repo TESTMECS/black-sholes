@@ -60,8 +60,8 @@ wheels = [
 ]
 
 [[package]]
-name = "black-sholes"
-version = "0.1.0"
+name = "blacksholes"
+version = "0.1"
 source = { virtual = "." }
 dependencies = [
     { name = "backoff" },

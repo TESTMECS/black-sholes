@@ -27,10 +27,11 @@ class UserLogin(UserBase):
 
 class UserResponse(UserBase):
     """User response model."""
+
     model_config = ConfigDict(from_attributes=True)
     role: str
 
-   
+
 class Token(BaseModel):
     """Token response model."""
 

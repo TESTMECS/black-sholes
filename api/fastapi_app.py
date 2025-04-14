@@ -9,6 +9,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from api.routes import register_routers
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 # Global variable to store the Streamlit process
@@ -49,11 +52,12 @@ app.add_middleware(
 
 def start_streamlit():
     """Start the Streamlit application as a subprocess"""
+    logger.debug("Starting Streamlit application...")
     global streamlit_process
     if streamlit_process is None or streamlit_process.poll() is not None:
         # Start Streamlit on the specified port
         streamlit_process = subprocess.Popen(
-            ["streamlit", "run", "app.py", "--server.port", str(streamlit_port)],
+            ["streamlit", "run", "streamlit_app.py", "--server.port", str(streamlit_port)],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -84,6 +88,7 @@ def stop_streamlit():
 async def index():
     """Redirect to the Streamlit app"""
     # Start Streamlit if it's not already running
+    logger.debug("Hit index route")
     start_streamlit()
     # Redirect to the Streamlit app
     return f"""

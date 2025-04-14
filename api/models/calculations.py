@@ -40,5 +40,5 @@ class CalculationResponse(CalculationBase):
 class CalculationList(BaseModel):
     """Calculation list response model."""
 
-    data: List[CalculationResponse]
+    data: List[Dict[str, Any]]
     meta: Dict[str, Any]

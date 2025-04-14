@@ -31,11 +31,10 @@ class HeatmapCreate(HeatmapBase):
 
 class HeatmapResponse(HeatmapBase):
     """Heatmap response model."""
+
     model_config = ConfigDict(from_attributes=True)
     id: int
     calculation_id: int
-
-    
 
 
 class HeatmapList(BaseModel):
