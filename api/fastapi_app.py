@@ -57,7 +57,13 @@ def start_streamlit():
     if streamlit_process is None or streamlit_process.poll() is not None:
         # Start Streamlit on the specified port
         streamlit_process = subprocess.Popen(
-            ["streamlit", "run", "streamlit_app.py", "--server.port", str(streamlit_port)],
+            [
+                "streamlit",
+                "run",
+                "streamlit_app.py",
+                "--server.port",
+                str(streamlit_port),
+            ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -84,7 +90,7 @@ def stop_streamlit():
     return False
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, tags=["streamlit"])
 async def index():
     """Redirect to the Streamlit app"""
     # Start Streamlit if it's not already running
@@ -127,7 +133,7 @@ async def index():
     """
 
 
-@app.get("/status")
+@app.get("/status", tags=["streamlit"])
 async def status():
     """Check if Streamlit is running"""
     if streamlit_process and streamlit_process.poll() is None:
@@ -136,7 +142,7 @@ async def status():
         return {"status": "stopped"}
 
 
-@app.get("/start")
+@app.get("/start", tags=["streamlit"])
 async def start():
     """Start the Streamlit application"""
     if start_streamlit():
@@ -145,7 +151,7 @@ async def start():
         return {"status": "already_running", "port": streamlit_port}
 
 
-@app.get("/stop")
+@app.get("/stop", tags=["streamlit"])
 async def stop():
     """Stop the Streamlit application"""
     if stop_streamlit():
@@ -154,7 +160,7 @@ async def stop():
         return {"status": "not_running"}
 
 
-@app.get("/restart")
+@app.get("/restart", tags=["streamlit"])
 async def restart():
     """Restart the Streamlit application"""
     stop_streamlit()
@@ -164,7 +170,7 @@ async def restart():
         return {"status": "failed_to_restart"}
 
 
-@app.get("/api")
+@app.get("/api", tags=["api"])
 async def api_index():
     """Base API route with information"""
     return {
@@ -185,6 +191,7 @@ register_routers(app)
 if __name__ == "__main__":
     try:
         import uvicorn
+
         uvicorn.run("api.fastapi_app:app", host="localhost", port=5000, reload=True)
     except ImportError:
         print(

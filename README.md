@@ -1,6 +1,6 @@
 # Black-Scholes Option Pricing Model
 
-This application implements the Black-Scholes option pricing model with interactive visualizations using Streamlit and Flask.
+This application implements the Black-Scholes option pricing model with interactive visualizations using Streamlit, a FastAPI backend, and a Python SDK for programmatic access.
 
 ## Features
 
@@ -11,7 +11,9 @@ This application implements the Black-Scholes option pricing model with interact
 - Calculate button to explicitly trigger calculations and store results in SQLite database
 - Historical calculation storage and retrieval
 - Adjustable parameters for heatmap visualization
-- Flask server to host the Streamlit application
+- FastAPI backend with JWT authentication and OpenAPI documentation
+- Python SDK for programmatic access to the API
+- Streamlit frontend for interactive visualization
 
 ## Installation
 
@@ -36,36 +38,65 @@ To run the application directly with Streamlit:
 # use the justfile!
 just streamlit
 # Or use the environment
-source .venv/bin/activate && streamlit run app.py
+source .venv/bin/activate && streamlit run streamlit_app.py
 ```
 
 This will start the Streamlit server and open the application on port 8501.
 
-### Running with Flask
+### Running with FastAPI
 
-To run the application with Flask (which will automatically start Streamlit):
+To run the application with FastAPI (which will automatically start Streamlit):
 
 ```bash
-python flask_app.py
+# use the justfile!
+just runapp
+# Or use uvicorn directly
+uvicorn api.fastapi_app:app --reload
 ```
 
-This will start the Flask server on port 5000 and the Streamlit application on port 8501. You can access the application by navigating to:
+This will start the FastAPI server on port 5000 and the Streamlit application on port 8501. You can access the application by navigating to:
 
-- Flask entry point: http://localhost:5000
+- FastAPI entry point: http://localhost:5000
 - Streamlit direct access: http://localhost:8501
+- API documentation: http://localhost:5000/docs or http://localhost:5000/redoc
 
 ## API Endpoints
 
-The Flask application provides the following API endpoints:
+The FastAPI application provides the following API endpoints:
 
+### Streamlit Management
 - `/`: Redirects to the Streamlit application
 - `/status`: Returns the status of the Streamlit application
 - `/start`: Starts the Streamlit application if it's not already running
 - `/stop`: Stops the Streamlit application
 - `/restart`: Restarts the Streamlit application
 
+### Authentication
+- `/api/auth/register`: Register a new user
+- `/api/auth/login`: Login and get a JWT token
+
+### Calculations
+- `/api/calculations`: List, create, and manage calculations
+- `/api/calculations/{id}`: Get a specific calculation
+
+### Heatmaps
+- `/api/calculation/{id}/heatmaps`: Get or add heatmaps for a calculation
+
 ## Recent Enhancements
 
+### API and SDK
+- **FastAPI Implementation**: Replaced Flask with FastAPI for improved performance and features
+  - JWT-based authentication for secure API access
+  - Pydantic models for request/response validation
+  - Automatic OpenAPI documentation
+  - SQLAlchemy ORM for database access
+- **Python SDK**: Created a client library for programmatic access to the API
+  - Type-safe interfaces with Pydantic models
+  - Authentication handling
+  - Comprehensive test suite
+  - Backoff and retry mechanisms
+
+### Visualization
 - **Implied Volatility Surface**: 3D visualization of implied volatility across strikes and expirations
   - Interactive 3D surface plots showing volatility smile and term structure
   - Theoretical surface generation with customizable parameters
@@ -75,9 +106,12 @@ The Flask application provides the following API endpoints:
   - Stock price at expiration (x-axis)
   - Option premium paid (y-axis)
   - Visual reference lines for current premium and strike price
+
+### Backend
 - **Database Integration**: Added SQLite storage for:
   - Storing heatmap data for later retrieval
   - Historical comparison of different option scenarios
+  - User authentication and management
 - **UI Improvements**:
   - Explicit CALCULATE button for intentional calculations
   - Sidebar history panel showing past calculations
@@ -189,23 +223,74 @@ The following features are planned for future development:
 - **Risk Explainers**: Visual explanations of option risks and rewards
 - **Quiz Module**: Test understanding of option concepts
 
-## TODO: API Access
-- Use Fastapi, pydantic, and SQLAlchemy to create a RESTful API for the Black-Scholes application and let users access their saved calculations and heatmaps.
-### Routes:
-- JWT Authentication.
-- Access the Database saved models for an authenticated user from the streamlit app. 
-- Access our functions. 
-### Documentation. 
-- Auto generated with pydantic and OpenAPI. 
-### SDK
-- Python SDK to access our API. 
+### API and SDK Enhancements
+
+- **Enhanced SDK**: Add more client libraries for other languages (JavaScript, R)
+- **Webhooks**: Implement webhook notifications for calculation events
+- **Batch Processing**: Support for batch calculation requests
+- **Advanced Authentication**: OAuth2 with multiple providers
+- **API Rate Limiting**: Implement tiered rate limiting for different user roles
 
 
-### Features:
+## SDK Usage
+
+The Black-Scholes SDK provides a Python client for interacting with the API programmatically:
+
+```python
+from blacksholes.bs_client import BlackScholesClient
+from blacksholes.bs_config import BlackScholesConfig
+from blacksholes.schemas import CalculationCreate
+
+# Initialize the client
+config = BlackScholesConfig(bs_base_url="http://localhost:5000")
+client = BlackScholesClient(config)
+
+# Register and login
+client.register(username="user", password="password")
+token = client.login(username="user", password="password")
+
+# Create a calculation
+calculation = CalculationCreate(
+    spot_price=100.0,
+    strike_price=100.0,
+    time_to_maturity=1.0,
+    volatility=0.2,
+    risk_free_rate=0.05,
+    call_price=10.45,
+    put_price=5.57
+)
+result = client.create_calculation(calculation)
+
+# Get calculations
+calculations = client.get_calculations(limit=10, offset=0)
+```
+
+## API Documentation
+
+The API is implemented using FastAPI with the following features:
 
 - JWT-based authentication
-- Access to all calculations and heatmaps
+- Pydantic models for request/response validation
+- Automatic OpenAPI documentation
+- SQLAlchemy ORM for database access
 - Complete CRUD operations
 - Rate limiting and security best practices
 
 See [API Documentation](api/README.md) for complete details on how to use the API.
+
+Interactive API documentation is available at:
+- Swagger UI: http://localhost:5000/docs
+- ReDoc: http://localhost:5000/redoc
+
+## Testing
+
+To run the tests:
+
+```bash
+# use the justfile!
+just test
+# Or use pytest directly
+pytest src/blacksholes/tests/
+```
+
+The test suite includes unit tests for both the API and SDK components.
