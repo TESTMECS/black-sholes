@@ -9,7 +9,7 @@ from database.orm import init_db, DB_PATH
 from database.models.calculations import (
     store_calculation,
     get_calculations,
-    get_calculation_by_id
+    get_calculation_by_id,
 )
 from database.models.heatmap import store_heatmap_data
 
@@ -20,5 +20,5 @@ __all__ = [
     "store_calculation",
     "get_calculations",
     "get_calculation_by_id",
-    "store_heatmap_data"
-] 
+    "store_heatmap_data",
+]

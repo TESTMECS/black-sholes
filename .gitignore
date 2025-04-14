@@ -51,3 +51,4 @@ Thumbs.db
 .ruff_cache
 .venv
 .git
+.mypy_cache

@@ -1,5 +1,5 @@
 from flask.app import Flask
-from flask import Flask, jsonify, request
+from flask import jsonify
 import subprocess
 import time
 import atexit
@@ -17,20 +17,24 @@ streamlit_port = 8501  # Default Streamlit port
 # Register API routes
 register_blueprints(app)
 
+
 # TODO: Add routes for database functions.
 @app.route("/api")
 def api_index():
     """Base API route with information"""
-    return jsonify({
-        "name": "Black-Scholes API",
-        "version": "1.0.0",
-        "description": "API for Black-Scholes option pricing model",
-        "endpoints": {
-            "auth": "/api/auth",
-            "calculations": "/api/calculations",
-            "heatmaps": "/api/calculation/{id}/heatmaps"
+    return jsonify(
+        {
+            "name": "Black-Scholes API",
+            "version": "1.0.0",
+            "description": "API for Black-Scholes option pricing model",
+            "endpoints": {
+                "auth": "/api/auth",
+                "calculations": "/api/calculations",
+                "heatmaps": "/api/calculation/{id}/heatmaps",
+            },
         }
-    })
+    )
+
 
 def start_streamlit():
     """Start the Streamlit application as a subprocess"""

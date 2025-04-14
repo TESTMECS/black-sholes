@@ -2,7 +2,12 @@ import streamlit as st
 import plotly.express as px
 import numpy as np
 from functions.black_scholes import black_scholes, generate_price_matrix
-from database.db_storage import init_db, store_calculation, store_heatmap_data, get_calculations
+from database.db_storage import (
+    init_db,
+    store_calculation,
+    store_heatmap_data,
+    get_calculations,
+)
 
 # Set page configuration
 st.set_page_config(page_title="Black-Scholes Option Pricing Model", layout="wide")
@@ -131,8 +136,8 @@ if st.button("CALCULATE", type="primary"):
             vol_steps,
         )
 
-        # Store the heatmaps
-        store_heatmap_data(
+        # Store the heatmaps, returned heatmap ID
+        _ = store_heatmap_data(
             calculation_id=calculation_id,
             heatmap_type="call_price",
             min_spot=min_spot,
@@ -144,7 +149,7 @@ if st.button("CALCULATE", type="primary"):
             heatmap_data=call_prices,
         )
 
-        store_heatmap_data(
+        _ = store_heatmap_data(
             calculation_id=calculation_id,
             heatmap_type="put_price",
             min_spot=min_spot,
@@ -156,7 +161,7 @@ if st.button("CALCULATE", type="primary"):
             heatmap_data=put_prices,
         )
 
-        store_heatmap_data(
+        _ = store_heatmap_data(
             calculation_id=calculation_id,
             heatmap_type="call_pnl",
             min_spot=min_spot,
@@ -168,7 +173,7 @@ if st.button("CALCULATE", type="primary"):
             heatmap_data=call_pnl_matrix,
         )
 
-        store_heatmap_data(
+        _ = store_heatmap_data(
             calculation_id=calculation_id,
             heatmap_type="put_pnl",
             min_spot=min_spot,

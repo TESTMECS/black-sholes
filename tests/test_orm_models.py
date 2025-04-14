@@ -63,4 +63,3 @@ def test_orm_models():
         assert "call_price" in calculation["heatmaps"]
         assert calculation["heatmaps"]["call_price"]["min_spot"] == 90.0
         assert calculation["heatmaps"]["call_price"]["max_spot"] == 110.0
-
