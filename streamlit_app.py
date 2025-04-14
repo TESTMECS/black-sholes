@@ -220,8 +220,8 @@ with col2:
     # Add explanation for P&L
     st.markdown("---")
     st.markdown(
-        """**P&L (Profit & Loss)** shows how the value of your option would change at different 
-        spot prices and volatilities, compared to the current option price. 
+        """**P&L (Profit & Loss)** shows how the value of your option would change at different
+        spot prices and volatilities, compared to the current option price.
         Green indicates profit, red indicates loss."""
     )
 
@@ -396,7 +396,7 @@ st.markdown(
     """This heatmap shows the profit or loss at option expiration for different combinations of:
     - Final stock price at expiration (x-axis)
     - Initial option premium paid (y-axis)
-    
+
     **Green regions**: Profit (positive return after deducting the premium paid)
     **Red regions**: Loss (negative return, including the premium paid)"""
 )

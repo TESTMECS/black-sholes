@@ -66,6 +66,11 @@ The Flask application provides the following API endpoints:
 
 ## Recent Enhancements
 
+- **Implied Volatility Surface**: 3D visualization of implied volatility across strikes and expirations
+  - Interactive 3D surface plots showing volatility smile and term structure
+  - Theoretical surface generation with customizable parameters
+  - Multiple visualization options (3D surface, heatmap, contour plot)
+  - Support for uploading market data
 - **Improved Profit & Loss Visualization**: Enhanced P&L heatmaps that show potential returns based on:
   - Stock price at expiration (x-axis)
   - Option premium paid (y-axis)
@@ -78,6 +83,7 @@ The Flask application provides the following API endpoints:
   - Sidebar history panel showing past calculations
   - Improved color scales and data visualization
   - Better formatted annotations in heatmaps
+  - Multi-page navigation for advanced features
 
 ## Black-Scholes Model
 
@@ -128,6 +134,17 @@ For a put option buyer:
 P&L = max(0, strike_price - spot_price) - premium_paid
 ```
 
+### Implied Volatility
+
+Implied volatility is the volatility value that, when plugged into the Black-Scholes model, yields a theoretical option price equal to the current market price of that option. It represents the market's expectation of future volatility.
+
+The implied volatility surface shows how implied volatility varies with:
+
+- **Strike Price**: The volatility smile/skew effect (higher implied volatility for out-of-the-money options)
+- **Time to Expiration**: The term structure effect (how implied volatility changes with time to expiration)
+
+This surface is crucial for understanding market dynamics and pricing options more accurately, especially for exotic derivatives.
+
 ## Future Enhancements
 
 The following features are planned for future development:
@@ -141,7 +158,7 @@ The following features are planned for future development:
 ### Enhanced Analytics
 
 - **Greeks Visualization**: Interactive displays for delta, gamma, theta, vega, and rho
-- **Implied Volatility Surface**: 3D visualization of implied volatility across strikes and expirations
+- ~~**Implied Volatility Surface**: 3D visualization of implied volatility across strikes and expirations~~ ✅ Implemented
 - **Monte Carlo Simulation**: Probability distributions of future option values
 - **Scenario Analysis**: Stress testing options under different market conditions
 
@@ -172,9 +189,17 @@ The following features are planned for future development:
 - **Risk Explainers**: Visual explanations of option risks and rewards
 - **Quiz Module**: Test understanding of option concepts
 
-## API Access
+## TODO: API Access
+- Use Fastapi, pydantic, and SQLAlchemy to create a RESTful API for the Black-Scholes application and let users access their saved calculations and heatmaps.
+### Routes:
+- JWT Authentication.
+- Access the Database saved models for an authenticated user from the streamlit app. 
+- Access our functions. 
+### Documentation. 
+- Auto generated with pydantic and OpenAPI. 
+### SDK
+- Python SDK to access our API. 
 
-The Black-Scholes application now provides a secure, authenticated API to access the database.
 
 ### Features:
 

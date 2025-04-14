@@ -1,10 +1,14 @@
-from api.routes.auth import auth_bp
-from api.routes.calculations import calc_bp
-from api.routes.heatmaps import heatmap_bp
+"""API routes module."""
 
+from fastapi import FastAPI
 
-def register_blueprints(app):
-    """Register all API route blueprints with the Flask app"""
-    app.register_blueprint(auth_bp, url_prefix="/api/auth")
-    app.register_blueprint(calc_bp, url_prefix="/api/calculations")
-    app.register_blueprint(heatmap_bp, url_prefix="/api")
+# Import routers
+from api.routes.auth_routes import router as auth_router
+from api.routes.calculation_routes import router as calculation_router
+from api.routes.heatmap_routes import router as heatmap_router
+
+def register_routers(app: FastAPI) -> None:
+    """Register all API routers with the FastAPI app."""
+    app.include_router(auth_router)
+    app.include_router(calculation_router)
+    app.include_router(heatmap_router)

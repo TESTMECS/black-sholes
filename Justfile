@@ -1,9 +1,12 @@
 streamlit:
-  streamlit run app.py
+  streamlit run streamlit_app.py
 test:
   pytest tests/
 lint:
-  ruff check 
+  ruff check
 tsc:
-  mypy . 
-
+  mypy .
+runapp:
+  uv run app_fastapi.py
+testall:
+  pytest

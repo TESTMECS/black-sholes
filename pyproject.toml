@@ -1,18 +1,35 @@
 [project]
-name = "black-sholes"
-version = "0.1.0"
-description = "Add your description here"
+name = "blacksholes"
+version = "0.1"
+authors = [
+    { name = "TESTMEE" },
+]
+description = "Black Scholes Option Pricing Model"
 readme = "README.md"
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.10",
+  "Operating System :: OS Independent",
+]
 requires-python = ">=3.12"
 dependencies = [
+    "backoff>=2.2.1",
+    "fastapi>=0.115.12",
     "flask>=3.1.0",
+    "httpx>=0.28.1",
     "numpy>=2.2.4",
     "pandas>=2.2.3",
     "plotly>=6.0.1",
     "pyjwt>=2.10.1",
     "pytest>=8.3.5",
+    "python-dotenv>=1.1.0",
     "scipy>=1.15.2",
     "sqlalchemy>=2.0.40",
     "streamlit>=1.44.0",
+    "uvicorn>=0.34.1",
 ]
-requires = ["setuptools>=61.0"]
+

@@ -2,6 +2,16 @@
 
 This API provides authenticated access to the Black-Scholes option pricing model calculations and heatmaps stored in the database.
 
+## API Implementation
+
+The API is implemented using FastAPI, a modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
+
+Key features:
+- JWT-based authentication
+- Pydantic models for request/response validation
+- Automatic OpenAPI documentation
+- SQLAlchemy ORM for database access
+
 ## Authentication
 
 The API uses JWT (JSON Web Token) authentication. To use the API, you need to:
@@ -133,3 +143,29 @@ GET /api
 ```
 
 Returns information about the API and available endpoints.
+
+## Interactive Documentation
+
+FastAPI automatically generates interactive API documentation:
+
+- Swagger UI: `/docs`
+- ReDoc: `/redoc`
+
+These documentation pages allow you to:
+- View all available endpoints
+- See request/response models
+- Try out the API directly from the browser
+
+## Running the API
+
+To run the API:
+
+```bash
+python app_fastapi.py
+```
+
+This will start the FastAPI server on port 5000. You can access the API at:
+
+- API: http://localhost:5000/api
+- Documentation: http://localhost:5000/docs
+- ReDoc: http://localhost:5000/redoc

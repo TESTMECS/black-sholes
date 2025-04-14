@@ -1,39 +1,50 @@
-from flask.app import Flask
-from flask import jsonify
+"""
+FastAPI application for the Black-Scholes API.
+"""
+
 import subprocess
 import time
-import atexit
-from api.routes import register_blueprints
-from flask_cors import CORS
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from api.routes import register_routers
 
-app = Flask(__name__)
-# Enable CORS for all routes
-CORS(app)
 
 # Global variable to store the Streamlit process
 streamlit_process = None
 streamlit_port = 8501  # Default Streamlit port
+api_description = """
+This API provides authenticated access to the Black-Scholes option pricing model calculations and heatmaps stored in the database.
+Save your calculations and heatmaps in the streamlit application and then access them with this API.
+"""
 
-# Register API routes
-register_blueprints(app)
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    # Start Streamlit when the FastAPI app starts
+    start_streamlit()
+    yield
+    # Stop Streamlit when the FastAPI app stops
+    stop_streamlit()
 
 
-# TODO: Add routes for database functions.
-@app.route("/api")
-def api_index():
-    """Base API route with information"""
-    return jsonify(
-        {
-            "name": "Black-Scholes API",
-            "version": "1.0.0",
-            "description": "API for Black-Scholes option pricing model",
-            "endpoints": {
-                "auth": "/api/auth",
-                "calculations": "/api/calculations",
-                "heatmaps": "/api/calculation/{id}/heatmaps",
-            },
-        }
-    )
+# Create FastAPI app
+app = FastAPI(
+    title="Black-Scholes API",
+    description=api_description,
+    version="1.0.0",
+    lifespan=lifespan,
+)
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify the allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def start_streamlit():
@@ -47,7 +58,6 @@ def start_streamlit():
             stderr=subprocess.PIPE,
             text=True,
         )
-        # Wait a moment for Streamlit to start
         time.sleep(2)
         return True
     return False
@@ -70,8 +80,8 @@ def stop_streamlit():
     return False
 
 
-@app.route("/")
-def index():
+@app.get("/", response_class=HTMLResponse)
+async def index():
     """Redirect to the Streamlit app"""
     # Start Streamlit if it's not already running
     start_streamlit()
@@ -112,58 +122,66 @@ def index():
     """
 
 
-@app.route("/status")
-def status():
+@app.get("/status")
+async def status():
     """Check if Streamlit is running"""
     if streamlit_process and streamlit_process.poll() is None:
-        return jsonify({"status": "running", "port": streamlit_port})
+        return {"status": "running", "port": streamlit_port}
     else:
-        return jsonify({"status": "stopped"})
+        return {"status": "stopped"}
 
 
-@app.route("/start")
-def start():
+@app.get("/start")
+async def start():
     """Start the Streamlit application"""
     if start_streamlit():
-        return jsonify({"status": "started", "port": streamlit_port})
+        return {"status": "started", "port": streamlit_port}
     else:
-        return jsonify({"status": "already_running", "port": streamlit_port})
+        return {"status": "already_running", "port": streamlit_port}
 
 
-@app.route("/stop")
-def stop():
+@app.get("/stop")
+async def stop():
     """Stop the Streamlit application"""
     if stop_streamlit():
-        return jsonify({"status": "stopped"})
+        return {"status": "stopped"}
     else:
-        return jsonify({"status": "not_running"})
+        return {"status": "not_running"}
 
 
-@app.route("/restart")
-def restart():
+@app.get("/restart")
+async def restart():
     """Restart the Streamlit application"""
     stop_streamlit()
     if start_streamlit():
-        return jsonify({"status": "restarted", "port": streamlit_port})
+        return {"status": "restarted", "port": streamlit_port}
     else:
-        return jsonify({"status": "failed_to_restart"})
+        return {"status": "failed_to_restart"}
 
 
-# Start Streamlit when the Flask app starts
-def before_first_request():
-    start_streamlit()
+@app.get("/api")
+async def api_index():
+    """Base API route with information"""
+    return {
+        "name": "Black-Scholes API",
+        "version": "1.0.0",
+        "description": "API for Black-Scholes option pricing model",
+        "endpoints": {
+            "auth": "/api/auth",
+            "calculations": "/api/calculations",
+            "heatmaps": "/api/calculation/{id}/heatmaps",
+        },
+    }
 
 
-# Use with_appcontext for Flask 2.0+
-app.before_request_funcs.setdefault(None, []).append(before_first_request)
+# Include routers
+register_routers(app)
 
-
-# Stop Streamlit when the Flask app stops
-def cleanup():
-    stop_streamlit()
-
-
-# Register the cleanup function to be called when the app exits
-atexit.register(cleanup)
-
-application: Flask = app
+if __name__ == "__main__":
+    try:
+        import uvicorn
+        uvicorn.run("api.fastapi_app:app", host="localhost", port=5000, reload=True)
+    except ImportError:
+        print(
+            "Error: uvicorn is not installed. Please install it with 'pip install uvicorn'."
+        )
