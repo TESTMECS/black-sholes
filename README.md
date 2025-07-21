@@ -1,6 +1,7 @@
 # Black-Scholes Option Pricing Model
 [Project Idea From CJ](https://youtu.be/lY-NP4X455U?si=ixc8cO5N-SBil_F9)
 This application implements the Black-Scholes option pricing model with interactive visualizations using Streamlit, a FastAPI backend, and a Python SDK.
+[Live Preview on Streamlit cloud](https://black-sholes-h4zchf4vphtx4pxce5vsjd.streamlit.app/)
 ## Features
 - Calculate call and put option prices using the Black-Scholes model
 - Interactive inputs for all parameters (current price, strike price, time to maturity, volatility, risk-free rate)
